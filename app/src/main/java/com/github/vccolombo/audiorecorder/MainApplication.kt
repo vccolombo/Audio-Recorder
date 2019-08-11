@@ -21,6 +21,8 @@ class MainApplication: Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
         }
+
+        // TODO: Make a better directory creation?
         val path = Environment.getExternalStorageDirectory().absolutePath + "/AudioRecorder/"
         val dir = File(path)
         if (!dir.exists()) dir.mkdirs()

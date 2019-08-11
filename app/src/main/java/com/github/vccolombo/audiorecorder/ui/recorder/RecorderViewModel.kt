@@ -28,11 +28,11 @@ class RecorderViewModel : ViewModel() {
         recording.value = true
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
-            setAudioSamplingRate(128000)
+            setAudioSamplingRate(44100)
             setAudioEncodingBitRate(96000)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setOutputFile(Environment.getExternalStorageDirectory()
-                .absolutePath + "/AudioRecorder/myaudio.mp3" )
+                .absolutePath + "/AudioRecorder/myaudio.mp3" ) // TODO: Change file name
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
 
             try {
