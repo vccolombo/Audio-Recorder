@@ -16,7 +16,7 @@ class RecorderViewModel : ViewModel() {
     private val coroutineContext: CoroutineContext = Dispatchers.Default + job
     private val scope = CoroutineScope(coroutineContext)
 
-    private var recording = MutableLiveData<Boolean>(false)
+    var recording: MutableLiveData<Boolean> = MutableLiveData(false)
     private var recorder: MediaRecorder? = null
 
     fun onRecord() {
