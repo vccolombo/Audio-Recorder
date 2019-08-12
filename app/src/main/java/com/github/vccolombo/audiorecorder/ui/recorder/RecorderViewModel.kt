@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.io.IOException
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 
@@ -25,6 +26,7 @@ class RecorderViewModel : ViewModel() {
         else startRecording()
     }
 
+    // TODO: check what happens when there is no space to save
     private fun startRecording() {
         Timber.d("Start recording")
         recording.value = true
@@ -34,7 +36,7 @@ class RecorderViewModel : ViewModel() {
             setAudioEncodingBitRate(96000)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setOutputFile(Environment.getExternalStorageDirectory()
-                .absolutePath + "/AudioRecorder/myaudio.mp3" ) // TODO: Change file name
+                .absolutePath + "/AudioRecorder/" + Calendar.getInstance().time + ".mp3" )
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
 
             try {

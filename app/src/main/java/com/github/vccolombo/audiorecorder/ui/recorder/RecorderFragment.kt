@@ -12,7 +12,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.github.vccolombo.audiorecorder.databinding.RecorderFragmentBinding
 import timber.log.Timber
 
-// TODO: Make visual hints that audio is recording / stoped
 // TODO: Implement audio playback
 // TODO: Cloud upload
 // TODO: MARKERS
