@@ -1,7 +1,9 @@
 package com.github.vccolombo.audiorecorder.ui.recorder
 
 import android.media.MediaRecorder
+import android.os.CountDownTimer
 import android.os.Environment
+import android.widget.Chronometer
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
@@ -14,7 +16,7 @@ import kotlin.coroutines.CoroutineContext
 class RecorderViewModel : ViewModel() {
 
     private val job = Job()
-    private val coroutineContext: CoroutineContext = Dispatchers.Default + job
+    private val coroutineContext: CoroutineContext = Dispatchers.Main + job
     private val scope = CoroutineScope(coroutineContext)
 
     var recording: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -35,7 +37,7 @@ class RecorderViewModel : ViewModel() {
             setAudioSamplingRate(44100)
             setAudioEncodingBitRate(96000)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setOutputFile(Environment.getExternalStorageDirectory()
+            setOutputFile(Environment.getExternalStorageDirectory() // TODO: Fix deprecated API 29
                 .absolutePath + "/AudioRecorder/" + Calendar.getInstance().time + ".mp3" )
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
 
@@ -50,7 +52,7 @@ class RecorderViewModel : ViewModel() {
         // Audio amplitude for display
         scope.launch {
             repeat(1_000_000_000) {
-                delay(100L)
+                delay(300L)
                 val amplitude = recorder?.maxAmplitude
                 Timber.d("""Repeat $it: $amplitude""")
             }
@@ -68,7 +70,7 @@ class RecorderViewModel : ViewModel() {
         Timber.d("Stop recording")
 
         // Stop audio amplitude coroutine
-        job.cancel()
+        scope.coroutineContext.cancelChildren()
 
         recorder?.apply {
             stop()
