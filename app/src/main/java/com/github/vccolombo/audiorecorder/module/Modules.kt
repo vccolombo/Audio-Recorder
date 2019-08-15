@@ -1,4 +1,4 @@
-package com.github.vccolombo.audiorecorder
+package com.github.vccolombo.audiorecorder.module
 
 import com.github.vccolombo.audiorecorder.ui.recorder.RecorderViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
