@@ -81,4 +81,19 @@ class RecorderViewModel : ViewModel() {
 
         recording.value = false
     }
+
+    override fun onCleared() {
+        job.cancel()
+
+        recorder?.apply {
+            stop()
+            reset()
+            release()
+        }
+        recorder = null
+
+        recording.value = false
+
+        super.onCleared()
+    }
 }
