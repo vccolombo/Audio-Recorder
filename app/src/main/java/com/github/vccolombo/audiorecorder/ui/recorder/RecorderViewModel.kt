@@ -22,28 +22,29 @@ class RecorderViewModel : ViewModel() {
     private val scope = CoroutineScope(coroutineContext)
 
     var recording: MutableLiveData<Boolean> = MutableLiveData(false)
+    var started: MutableLiveData<Boolean> = MutableLiveData(false)
+    var paused: MutableLiveData<Boolean> = MutableLiveData(false)
+
     private var recorder: MediaRecorder? = null
 
-    fun onRecord() {
-        Timber.d("Record button clicked")
-        if (recording.value == true) stopRecording()
-        else startRecording()
-    }
-
     // TODO: check what happens when there is no space to save
-    private fun startRecording() {
+    fun startRecording() {
+        // Create directory to save the audios if not created before
         // TODO: Make a better directory creation?
         val dir = File(PATH_RECORDINGS_DIRECTORY)
         if (!dir.exists()) dir.mkdirs()
 
         Timber.d("Start recording")
         recording.value = true
+        started.value = true
+        paused.value = false
+
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setAudioSamplingRate(44100)
             setAudioEncodingBitRate(96000)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setOutputFile(PATH_RECORDINGS_DIRECTORY + Calendar.getInstance().time + ".mp3" )
+            setOutputFile(PATH_RECORDINGS_DIRECTORY + Calendar.getInstance().time + ".mp3")
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
 
             try {
@@ -60,19 +61,30 @@ class RecorderViewModel : ViewModel() {
             repeat(1_000_000_000) {
                 delay(300L)
                 val amplitude = recorder?.maxAmplitude
-                Timber.d("""Repeat $it: $amplitude""")
             }
         }
 
     }
 
-    private fun pauseRecording() {
-        TODO()
+    fun pauseRecording() {
+        Timber.d("Pause recording")
+        paused.value = true
+        recording.value = false
+
+        recorder?.pause()
+    }
+
+    fun continueRecording() {
+        Timber.d("Continue recording")
+        recording.value = true
+        paused.value = false
+
+        recorder?.resume()
     }
 
     // TODO: Change file name when finishing recording
-    // TODO: Check if killing the app while recording is safe
-    private fun stopRecording() {
+    // TODO: Check if killing the app while recording is safe (might be because of onCleared() is implemented)
+    fun stopRecording() {
         Timber.d("Stop recording")
 
         // Stop audio amplitude coroutine
@@ -86,6 +98,8 @@ class RecorderViewModel : ViewModel() {
         recorder = null
 
         recording.value = false
+        paused.value = false
+        started.value = false
     }
 
     override fun onCleared() {
@@ -97,8 +111,6 @@ class RecorderViewModel : ViewModel() {
             release()
         }
         recorder = null
-
-        recording.value = false
 
         super.onCleared()
     }
