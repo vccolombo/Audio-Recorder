@@ -15,29 +15,18 @@ import timber.log.Timber
 
 // TODO: Remove this feature when UI overhaul
 @BindingAdapter("recordingText")
-fun setRecordingText(view: TextView, isRecording: MutableLiveData<Boolean>) {
-    val parentActivity: AppCompatActivity? = view.getParentActivity()
-    if (parentActivity != null) {
-        isRecording.observe(parentActivity, Observer { value ->
-            if (value == true) view.text = "Recording"
-            else view.text = "Not recording"
-
-        })
-    }
+fun setRecordingText(view: TextView, isRecording: Boolean) {
+    if (isRecording) view.text = "Recording"
+    else view.text = "Not recording"
 }
 
 // TODO: Fix this to take pause into account
 @BindingAdapter("recordingTimer")
-fun recordingTimer(view: Chronometer, isRecording: MutableLiveData<Boolean>) {
-    val parentActivity: AppCompatActivity? = view.getParentActivity()
-    if (parentActivity != null) {
-        isRecording.observe(parentActivity, Observer { value ->
-            if (value == true) {
-                view.base = SystemClock.elapsedRealtime()
-                view.start()
-            } else {
-                view.stop()
-            }
-        })
+fun recordingTimer(view: Chronometer, isRecording: Boolean) {
+    if (isRecording) {
+        view.base = SystemClock.elapsedRealtime()
+        view.start()
+    } else {
+        view.stop()
     }
 }
