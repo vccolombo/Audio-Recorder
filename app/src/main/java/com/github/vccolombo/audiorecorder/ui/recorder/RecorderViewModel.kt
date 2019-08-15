@@ -6,8 +6,10 @@ import android.os.Environment
 import android.widget.Chronometer
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.github.vccolombo.audiorecorder.utils.PATH_RECORDINGS_DIRECTORY
 import kotlinx.coroutines.*
 import timber.log.Timber
+import java.io.File
 import java.io.IOException
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -30,6 +32,10 @@ class RecorderViewModel : ViewModel() {
 
     // TODO: check what happens when there is no space to save
     private fun startRecording() {
+        // TODO: Make a better directory creation?
+        val dir = File(PATH_RECORDINGS_DIRECTORY)
+        if (!dir.exists()) dir.mkdirs()
+
         Timber.d("Start recording")
         recording.value = true
         recorder = MediaRecorder().apply {
@@ -37,8 +43,7 @@ class RecorderViewModel : ViewModel() {
             setAudioSamplingRate(44100)
             setAudioEncodingBitRate(96000)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setOutputFile(Environment.getExternalStorageDirectory() // TODO: Fix deprecated API 29
-                .absolutePath + "/AudioRecorder/" + Calendar.getInstance().time + ".mp3" )
+            setOutputFile(PATH_RECORDINGS_DIRECTORY + Calendar.getInstance().time + ".mp3" )
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
 
             try {
@@ -49,6 +54,7 @@ class RecorderViewModel : ViewModel() {
             start()
         }
 
+        // TODO: Actually display it
         // Audio amplitude for display
         scope.launch {
             repeat(1_000_000_000) {

@@ -3,6 +3,7 @@ package com.github.vccolombo.audiorecorder
 import android.app.Application
 import android.os.Environment
 import com.github.vccolombo.audiorecorder.module.viewModelModules
+import com.github.vccolombo.audiorecorder.utils.PATH_RECORDINGS_DIRECTORY
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -22,11 +23,5 @@ class MainApplication: Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
         }
-
-        // TODO: Make a better directory creation?
-        // TODO: Removing the directory while app is running throws an error
-        val path = Environment.getExternalStorageDirectory().absolutePath + "/AudioRecorder/"
-        val dir = File(path)
-        if (!dir.exists()) dir.mkdirs()
     }
 }
