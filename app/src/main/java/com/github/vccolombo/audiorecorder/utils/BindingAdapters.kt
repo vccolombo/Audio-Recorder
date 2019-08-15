@@ -1,26 +1,12 @@
 package com.github.vccolombo.audiorecorder.utils
 
-import android.content.ContextWrapper
 import android.os.SystemClock
-import android.view.View
 import android.widget.Chronometer
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-
-// Todo: move this to a extensions file
-fun View.getParentActivity(): AppCompatActivity?{
-    var context = this.context
-    while (context is ContextWrapper) {
-        if (context is AppCompatActivity) {
-            return context
-        }
-        context = context.baseContext
-    }
-    return null
-}
 
 @BindingAdapter("recordingText")
 fun setRecordingText(view: TextView, isRecording: MutableLiveData<Boolean>) {
